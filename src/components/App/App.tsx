@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import styles from './App.module.scss'
-import { TypeFilters, getProductsIds } from '../../utils/getProductsIds';
+import { getProductsIds } from '../../utils/getProductsIds';
 import Pagination from '../blocks/Pagination/Pagination';
 import ProductList from '../blocks/ProductList/ProductList';
 import Loading from '../ui/Loading/Loading';
 import Filters from '../blocks/Filters/Filters';
+import { IFilters } from '../../Interfaces/filters';
 
 const PRODUCTS_ON_PAGE = 50
 
@@ -12,12 +13,15 @@ function App() {
   const [productIds, setProductIds] = useState<Array<string>>();
   const [currentProductIds, setCurrentProductIds] = useState<Array<string>>()
   const [currentPage, setCurrentPage] = useState(1)
-  const [filters, setFilters] = useState<TypeFilters>({})
+  const [filters, setFilters] = useState<IFilters>({})
 
   useEffect(() => {
     getProductsIds(filters, (data: Array<string>) => {
       setProductIds(data)
-    })
+    },
+      () => getProductsIds(filters, (data: Array<string>) => {
+        setProductIds(data)
+      }))
   }, [filters])
 
   useEffect(() => {
@@ -28,13 +32,13 @@ function App() {
     <header>
       <h1 className={styles.title}> Каталог: </h1>
     </header>
+    <Filters onChange={(data) => {
+      setFilters(data)
+      setCurrentPage(1)
+    }} className={styles.filters} />
 
     {productIds && currentProductIds ?
       <>
-        <Filters onChange={(data) => {
-          setFilters(data)
-          setCurrentPage(1)
-        }} className={styles.filters} />
 
         <ProductList productIds={currentProductIds} className={styles.productList} />
 
@@ -44,6 +48,7 @@ function App() {
           onClickButton={(e) => {
             const pageNumber = Number(e.currentTarget.getAttribute('data-pagenumber'))
             if (pageNumber && !isNaN(pageNumber)) {
+              window.scrollTo(0, 0)
               setCurrentPage(pageNumber)
               setCurrentProductIds(productIds?.slice(pageNumber * PRODUCTS_ON_PAGE, (pageNumber + 1) * PRODUCTS_ON_PAGE))
             }

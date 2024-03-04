@@ -17,15 +17,20 @@ const ProductList: FC<TypeProductListProps> = ({ productIds, className }) => {
 
     useEffect(() => {
         setProducts(undefined)
-        getProductsData(productIds, (data) => setProducts(data))
+        getProductsData(productIds,
+            (data) => setProducts(data),
+            () => getProductsData(productIds, (data) => setProducts(data)))
     }, [productIds])
 
     return products ?
-        <ul className={`${styles.productList} ${className ? className : ''}`}>
-            {products.map((product) => <li key={product.id}>
-                <ProductItem product={product} />
-            </li>)}
-        </ul>
+        products.length ?
+            <ul className={`${styles.productList} ${className ? className : ''}`}>
+                {products.map((product) => <li key={product.id}>
+                    <ProductItem product={product} />
+                </li>)}
+            </ul>
+            :
+            <div className={`${styles.notEnought}  ${className ? className : ''}`}>Кажется, товаров нет!</div>
         :
         <Loading className={styles.isLoading} />
 }

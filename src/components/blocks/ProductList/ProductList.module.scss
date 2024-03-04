@@ -10,6 +10,12 @@
   }
 }
 
+.notEnought {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .isLoading {
   height: 100%;
 }

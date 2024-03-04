@@ -13,7 +13,7 @@ const ProductItem: FC<TypeProductItemProps> = ({ product }) => {
             product.brand &&
             <span className={styles.propertyContainer}>
                 <span >
-                    Фирма:
+                    Бренд:
                 </span>
                 <span className={styles.propertyValue}>
                     {product.brand}

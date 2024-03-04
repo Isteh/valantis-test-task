@@ -1,6 +1,8 @@
 .catalog {
   display: flex;
   flex-direction: column;
+
+  height: 100%;
 }
 
 .title {
@@ -15,10 +17,11 @@
 
 .productList {
   margin: 20px var(--margin-default);
-  min-height: 50vh;
+  min-height: 20vh;
 }
 
 .pagination {
+  margin-top: auto;
   margin-left: auto;
   margin-right: var(--margin-default);
 

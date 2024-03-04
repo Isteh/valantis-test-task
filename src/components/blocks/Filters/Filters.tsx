@@ -1,10 +1,10 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, FormEvent, useEffect, useState } from 'react'
 import Input from '../../ui/Input/Input'
 import { getProductsFields } from '../../../utils/getProductsFields'
 import Loading from '../../ui/Loading/Loading'
 import Select from '../../ui/Select/Select'
 import styles from './Filters.module.scss'
-import { TypeFilters } from '../../../utils/getProductsIds'
+import { IFilters } from '../../../Interfaces/filters'
 
 type TypeMinMaxPrice = {
     min: number
@@ -12,7 +12,7 @@ type TypeMinMaxPrice = {
 }
 
 type TypeFiltersProps = {
-    onChange: (data: TypeFilters) => void
+    onChange: (data: IFilters) => void
     className?: string
 }
 
@@ -48,18 +48,40 @@ const Filters: FC<TypeFiltersProps> = ({ onChange, className }) => {
     const [minMaxPrice, setMinMaxPrice] = useState<TypeMinMaxPrice>()
     const [currentFilter, setCurrentFilter] = useState(FILTERS.NAME)
 
+    const formEventHandler = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        const formData = new FormData(e.currentTarget)
+        onChange(extractFormData(formData, currentFilter))
+    }
+
     useEffect(() => {
         getProductsFields('brand', (data) => {
             const stringData = data.map(el => el.toString())
             setBrands(stringData)
-        })
+        },
+            () =>
+                getProductsFields('brand', (data) => {
+                    const stringData = data.map(el => el.toString())
+                    setBrands(stringData)
+                })
+        )
         getProductsFields('price', (data) => {
             const numberData = data.map(el => Number(el))
             setMinMaxPrice({
                 min: Math.min(...numberData),
                 max: Math.max(...numberData)
             })
-        })
+        },
+            () =>
+                getProductsFields('price', (data) => {
+                    const numberData = data.map(el => Number(el))
+                    setMinMaxPrice({
+                        min: Math.min(...numberData),
+                        max: Math.max(...numberData)
+                    })
+                })
+        )
     }, [])
 
     return <div className={`${styles.filtersForm} ${className ? className : ''}`}
@@ -75,13 +97,8 @@ const Filters: FC<TypeFiltersProps> = ({ onChange, className }) => {
             }} />
 
         <form name='catalog_filters'
-            onChange={(e) => {
-                e.preventDefault()
-
-                const formData = new FormData(e.currentTarget)
-                console.log(formData, extractFormData(formData, currentFilter))
-                onChange(extractFormData(formData, currentFilter))
-            }}>
+            onChange={formEventHandler}
+            onSubmit={formEventHandler}>
             {brands && minMaxPrice ?
                 (() => {
                     switch (currentFilter) {

@@ -1,16 +1,28 @@
 import { IProduct } from '../Interfaces/product';
-import { fetchProductsData } from './fetchProductsData';
+import { API_URL } from '../consts';
+import { getApiAccesKey } from './getApiAccesKey';
 
 type TypeGetProductsData = (
   productIds: Array<string>,
-  onSucces: (data: Array<IProduct>) => void
+  onSucces: (data: Array<IProduct>) => void,
+  onError?: (e: Error) => void
 ) => Promise<void>;
 
 export const getProductsData: TypeGetProductsData =
-  (productIds, onSucces) => {
-    return fetchProductsData(productIds, (e) =>
-      fetchProductsData(productIds)
-    )
+  (productIds, onSucces, onError) => {
+    return fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Auth': getApiAccesKey(),
+      },
+      body: JSON.stringify({
+        action: 'get_items',
+        params: { ids: productIds },
+      }),
+    })
+      .then((res) => res.json())
+      .then<Array<IProduct>>((res) => res.result)
       .then((res) =>
         res.filter((product, index, array) => {
           const indexCopy = array
@@ -24,5 +36,8 @@ export const getProductsData: TypeGetProductsData =
         })
       )
       .then((res) => onSucces(res))
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        console.log(e.status);
+        onError && onError(e);
+      });
   };
