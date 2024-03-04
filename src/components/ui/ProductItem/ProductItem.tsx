@@ -9,6 +9,9 @@ type TypeProductItemProps = {
 const ProductItem: FC<TypeProductItemProps> = ({ product }) => {
     return <div className={styles.card}>
         <span className={styles.productTitle}>{product.product}</span>
+        <span >
+            {`ID: ${product.id}`}
+        </span>
         {
             product.brand &&
             <span className={styles.propertyContainer}>
