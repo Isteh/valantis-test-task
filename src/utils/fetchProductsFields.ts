@@ -1,12 +1,10 @@
+import { API_URL } from '../consts';
 import { getApiAccesKey } from './getApiAccesKey';
 
 type TypeFetchProductsFields = (
   field: 'brand' | 'price',
   errorCallback?: ErrorCallback
 ) => Promise<Array<string | number>>;
-
-const API_URL =
-  'http://api.valantis.store:40000/';
 
 export const fetchProductsFields: TypeFetchProductsFields =
   (field, errorCallback) => {

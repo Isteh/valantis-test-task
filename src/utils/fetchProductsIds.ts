@@ -1,3 +1,4 @@
+import { API_URL } from '../consts';
 import { getApiAccesKey } from './getApiAccesKey';
 import { TypeFilters } from './getProductsIds';
 
@@ -5,9 +6,6 @@ type TypeFetchProductsIds = (
   filters: TypeFilters,
   errorCallback?: ErrorCallback
 ) => Promise<Array<string>>;
-
-const API_URL =
-  'http://api.valantis.store:40000/';
 
 export const fetchProductsIds: TypeFetchProductsIds =
   (

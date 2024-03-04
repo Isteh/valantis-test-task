@@ -1,13 +1,11 @@
 import { IProduct } from '../Interfaces/product';
+import { API_URL } from '../consts';
 import { getApiAccesKey } from './getApiAccesKey';
 
 type TypeFetchProductsData = (
   productIds: Array<string>,
   errorCallback?: ErrorCallback
 ) => Promise<Array<IProduct>>;
-
-const API_URL =
-  'http://api.valantis.store:40000/';
 
 export const fetchProductsData: TypeFetchProductsData =
   (productIds, errorCallback) => {
