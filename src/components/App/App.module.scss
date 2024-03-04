@@ -1,0 +1,30 @@
+.catalog {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  margin: 30px var(--margin-default);
+
+  color: var(--color-accent);
+}
+
+.filters {
+  margin: 0 var(--margin-default);
+}
+
+.productList {
+  margin: 20px var(--margin-default);
+  min-height: 50vh;
+}
+
+.pagination {
+  margin-left: auto;
+  margin-right: var(--margin-default);
+
+  margin-bottom: var(--margin-default);
+}
+
+.isLoading {
+  height: 50vh;
+}
