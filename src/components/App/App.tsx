@@ -13,15 +13,12 @@ function App() {
   const [productIds, setProductIds] = useState<Array<string>>();
   const [currentProductIds, setCurrentProductIds] = useState<Array<string>>()
   const [currentPage, setCurrentPage] = useState(1)
-  const [filters, setFilters] = useState<IFilters>({})
+  const [filters, setFilters] = useState<IFilters | null>(null)
 
   useEffect(() => {
-    getProductsIds(filters, (data: Array<string>) => {
+    getProductsIds((data: Array<string>) => {
       setProductIds(data)
-    },
-      () => getProductsIds(filters, (data: Array<string>) => {
-        setProductIds(data)
-      }))
+    }, filters)
   }, [filters])
 
   useEffect(() => {
@@ -33,8 +30,10 @@ function App() {
       <h1 className={styles.title}> Каталог: </h1>
     </header>
     <Filters onChange={(data) => {
-      setFilters(data)
-      setCurrentPage(1)
+      if (filters !== data) {
+        setFilters(data)
+        setCurrentPage(1)
+      }
     }} className={styles.filters} />
 
     {productIds && currentProductIds ?

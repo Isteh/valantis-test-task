@@ -12,7 +12,7 @@ type TypeMinMaxPrice = {
 }
 
 type TypeFiltersProps = {
-    onChange: (data: IFilters) => void
+    onChange: (data: IFilters | null) => void
     className?: string
 }
 
@@ -38,7 +38,7 @@ const extractFormData = (formData: FormData, currentFilter: string) => {
             break
     }
 
-    return {}
+    return null
 }
 
 
@@ -59,29 +59,14 @@ const Filters: FC<TypeFiltersProps> = ({ onChange, className }) => {
         getProductsFields('brand', (data) => {
             const stringData = data.map(el => el.toString())
             setBrands(stringData)
-        },
-            () =>
-                getProductsFields('brand', (data) => {
-                    const stringData = data.map(el => el.toString())
-                    setBrands(stringData)
-                })
-        )
+        })
         getProductsFields('price', (data) => {
             const numberData = data.map(el => Number(el))
             setMinMaxPrice({
                 min: Math.min(...numberData),
                 max: Math.max(...numberData)
             })
-        },
-            () =>
-                getProductsFields('price', (data) => {
-                    const numberData = data.map(el => Number(el))
-                    setMinMaxPrice({
-                        min: Math.min(...numberData),
-                        max: Math.max(...numberData)
-                    })
-                })
-        )
+        })
     }, [])
 
     return <div className={`${styles.filtersForm} ${className ? className : ''}`}
@@ -93,7 +78,7 @@ const Filters: FC<TypeFiltersProps> = ({ onChange, className }) => {
             defaultValue={FILTERS.NAME}
             onChange={(e) => {
                 setCurrentFilter(e.currentTarget.value)
-                onChange({})
+                onChange(null)
             }} />
 
         <form name='catalog_filters'
